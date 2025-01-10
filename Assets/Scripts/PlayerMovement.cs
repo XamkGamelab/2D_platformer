@@ -61,7 +61,10 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (onWall() && !isGrounded())
         {
-            body.velocity = new Vector2(-Mathf.Sign(transform.localScale.x) * 50, jumpPower);
+             float wallJumpPowerY = jumpPower * 1.2f; 
+             float wallJumpPowerX = -Mathf.Sign(transform.localScale.x) * 50; 
+
+            body.velocity = new Vector2(wallJumpPowerX, wallJumpPowerY);
             anim.SetTrigger("jump");
 
         }
@@ -69,7 +72,10 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGrounded()
     {
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
+        float offset = 0.05f;
+        Vector2 boxCenter = new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.min.y - offset);
+        Vector2 boxSize = new Vector2(boxCollider.bounds.size.x * 0.1f, 0.1f);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCenter, boxSize, 0, Vector2.down, 0.1f, groundLayer);
         return raycastHit.collider != null;
     }
     public bool canAttack()
